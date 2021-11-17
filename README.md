@@ -27,7 +27,11 @@ https://user-images.githubusercontent.com/88465484/142149194-f39f851f-1c82-415d-
 ## Usage
 To launch the app, navigate to index.js within the terminal and type "node index.js". You will then be prompted with a list of options to navigate or change current database. This information will be stored locally on your device.
 
+General Usage:
 https://user-images.githubusercontent.com/88465484/142149328-212de73c-a3b0-4fee-93c6-515c3251b6ab.mov
+
+Adding and removing an employee:
+https://user-images.githubusercontent.com/88465484/142150653-bc5de7a8-8d69-49f9-b562-b59553b878a6.mov
 
 ## License 
 This project is licensed under MIT.  
