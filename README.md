@@ -18,7 +18,7 @@ To install, clone the repository and open with prefered editor. Note: mySQL, nod
 
 How to install dependencies:
 
-https://user-images.githubusercontent.com/88465484/142147841-a274ac80-9bfb-499d-adf0-64797247ab2c.mov
+https://user-images.githubusercontent.com/88465484/142149053-c297e39e-dcd7-4003-b2b0-0fb43af34c2e.mov
 
 How to source mySQL files:
 
