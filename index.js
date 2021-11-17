@@ -142,7 +142,10 @@ const updateEmployee = [
     }
 ];
 
-// prompts to change existing data for employee
+
+
+// -------- prompts to change existing data for employee --------
+
 const updateId = [
     {
         type: 'input',
@@ -183,10 +186,11 @@ const updateManager = [
     },
 ];
 
-// functions to initialize inquirer
 
-// INSERT INTO employees SET id = ${newEmployee.id}, first_name = "${newEmployee.firstName}", 
-//          last_name = "${newEmployee.lastName}", role_id = ${newEmployee.roleId};`,
+
+// -------- functions to initialize inquirer + initialize functions to change database --------
+
+// prompts info required to add new employee to database and sends it to function to update with inputted info
 const addEmployeePrompt = () => {
     inquirer.prompt(addEmployee).then((answers) => {
         if (answers.id === '' || answers.firstName === '' || answers.lastName === '' || answers.roleId === '') {
@@ -259,6 +263,11 @@ const removeDepartmentPrompt = () => {
     });
 };
 
+
+
+// -------- functions to prompt and update employees in database (combined) --------
+
+// function to change employee's id to desired imput
 const updateIdPrompt = (id) => {
     inquirer.prompt(updateId).then((answers) => {
         if (answers.updateId === null || answers.updateId === '') {
@@ -278,6 +287,7 @@ const updateIdPrompt = (id) => {
     });
 };
 
+// function to change employee's first name to desired imput
 const updateFNamePrompt = (id) => {
     inquirer.prompt(updateFName).then((answers) => {
         if (answers.updateFname === null || answers.updateFname === '') {
@@ -297,6 +307,7 @@ const updateFNamePrompt = (id) => {
     });
 };
 
+// function to change employee's last name to desired imput
 const updateLNamePrompt = (id) => {
     inquirer.prompt(updateLName).then((answers) => {
         if (answers.updateLname === null || answers.updateLname === '') {
@@ -316,6 +327,7 @@ const updateLNamePrompt = (id) => {
     });
 };
 
+// function to change employee's role to desired imput
 const updateRolePrompt = (id) => {
     inquirer.prompt(updateRole).then((answers) => {
         if (answers.updateRole === null || answers.updateRole === '') {
@@ -335,6 +347,7 @@ const updateRolePrompt = (id) => {
     });
 };
 
+// function to change employee's manager to desired imput
 const updateManagerPrompt = (id) => {
     inquirer.prompt(updateManager).then((answers) => {
         if (answers.updateManager === null || answers.updateManager === '') {
@@ -354,6 +367,7 @@ const updateManagerPrompt = (id) => {
     });
 };
 
+// asks for employee id and calls function to update desired feature
 const updateEmployeePrompt = () => {
     inquirer.prompt(updateEmployee).then((answers) => {
         if (answers.employeeUpdate === null || answers.employeeUpdate === '') {
@@ -375,6 +389,10 @@ const updateEmployeePrompt = () => {
     })
 };
 
+
+
+//  --------- functions to interact with database using mysql2 and user input ----------
+
 // create connection to database
 const connection = mysql.createConnection(
     {
@@ -383,8 +401,6 @@ const connection = mysql.createConnection(
     database: 'employees_db'
     },
 );
-
-//  --------- functions to interact with database ----------
 
 // view current employees 
 const viewEmployees = () => {
