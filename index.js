@@ -1,6 +1,9 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
+const createDepartment = require('./lib/department');
+const createRole = require('./lib/role');
+const createEmployee = require('./lib/employee');
 
 console.log(`
                                     ███████╗███╗   ███╗██████╗ ██╗      ██████╗ ██╗   ██╗███████╗███████╗
@@ -25,23 +28,215 @@ console.log(`
                                             ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝
                                                      `)
 
-// create prompts to interact with database
+// prompts to interact with database
+
+// initial prompt 
 const userInteract = [
     {
         type: 'list',
         name: 'interact',
         message: '✩ What would you like to do? ✩',
         choices: [
-        '✩ view all employees ✩', '✩ add employee ✩', '✩ update employee ✩', '✩ remove employee ✩',
-        '✩ view all roles ✩', '✩ add role ✩', '✩ remove role ✩', 
-        '✩ view all departments ✩', '✩ add department ✩', '✩ remove department ✩', 
+        '✩ view all employees ✩', '✩ view all roles ✩', '✩ view all departments ✩', 
+        '✩ update employee ✩', 
+        '✩ add role ✩', '✩ add department ✩', '✩ add employee ✩', 
+        '✩ remove department ✩', '✩ remove role ✩', '✩ remove employee ✩',
         '✩ quit ✩'
         ],
     },
 ];
 
-// create connection to database
+// add new employee to database prompt
+const addEmployee = [
+    {
+        type: 'input',
+        name: 'id',
+        message: '✩ Enter employee\'s id. ✩',
+    },
+    {
+        type: 'input',
+        name: 'firstName',
+        message: '✩ Enter employee\'s first name. ✩',
+    },
+    {
+        type: 'input',
+        name: 'lastName',
+        message: '✩ Enter employee\'s last name. ✩',
+    },
+    {
+        type: 'input',
+        name: 'roleId',
+        message: '✩ Enter employee\'s role id. ✩',
+    },
+    {
+        type: 'input',
+        name: 'manager',
+        message: '✩ Enter employee\'s manager id. ✩',
+    }
+];
 
+// add new role to database prompt
+const addRole = [
+    {
+        type: 'input',
+        name: 'roleTitle',
+        message: '✩ What is the role\'s title? ✩',
+    },
+    {
+        type: 'input',
+        name: 'roleSalary',
+        message: '✩ Enter role\'s salary. ✩',
+    },
+    {
+        type: 'input',
+        name: 'roleDepartment',
+        message: '✩ Enter role\'s department id. ✩',
+    }
+];
+
+// add new department to database prompt
+const addDepartment = [
+    {
+        type: 'input',
+        name: 'departmentName',
+        message: '✩ Enter name of department. ✩',
+    }
+];
+
+// remove employee from database prompt
+const removeEmployee = [
+    {
+        type: 'input',
+        name: 'employeeRemove',
+        message: '✩ What is the id of the employee you would like to remove? ✩',
+    }
+];
+
+// remove role from database prompt
+const removeRole = [
+    {
+        type: 'input',
+        name: 'roleRemove',
+        message: '✩ What is the id of the role you would like to remove? ✩',
+    }
+];
+
+// remove department from database prompt
+const removeDepartment = [
+    {
+        type: 'input',
+        name: 'departmentRemove',
+        message: '✩ What is the id of the department you would like to remove? ✩',
+    }
+];
+
+// update existing employee using id prompt
+const updateEmployee = [
+    {
+        type: 'input',
+        name: 'employeeUpdate',
+        message: '✩ What is the id of the employee you would like to update? ✩',
+    },
+    {
+        type: 'list',
+        name: 'employeeChange',
+        message: '✩ Which of the following would you like to update? ✩',
+        choices: ['✩ id ✩','✩ first name ✩','✩ last name ✩','✩ role id ✩','✩ manager ✩',],
+    }
+];
+
+// prompts to change existing data for employee
+const updateId = [
+    {
+        type: 'input',
+        name: 'updateId',
+        message: '✩ What is the employee\'s new id? ✩',
+    },
+];
+
+const updateFName = [
+    {
+        type: 'input',
+        name: 'updateFname',
+        message: '✩ What is the employee\'s new first name? ✩',
+    },
+];
+
+const updateLName = [
+    {
+        type: 'input',
+        name: 'updateLname',
+        message: '✩ What is the employee\'s new last name? ✩',
+    },
+];
+
+const updateRole = [
+    {
+        type: 'input',
+        name: 'updateRole',
+        message: '✩ What is the employee\'s new role id? ✩',
+    },
+];
+
+const updateManager = [
+    {
+        type: 'input',
+        name: 'updateManager',
+        message: '✩ What is the employee\'s new manager id? ✩',
+    },
+];
+
+// functions to initialize inquirer
+
+const addEmployeePrompt = () => {
+    inquirer.prompt(addEmployee).then((answers) => {
+        newEmployee = new createEmployee(answers.id, answers.firstName, answers.lastName, answers.roleId, answers.manager)
+    }).catch((error) => {
+        console.error(error);
+    })
+}
+
+const addRolePrompt = () => {
+    inquirer.prompt(addRole).then((answers) => {
+        newRole = createRole(answers.roleTitle, answers.roleSalary, answers.roleDepartment)
+    }).catch((error) => {
+        console.error(error);
+    })
+}
+
+const addDepartmentPrompt = () => {
+    inquirer.prompt(addDepartment).then((answers) => {
+        newDepartment = createDepartment(answers.departmentName)
+    }).catch((error) => {
+        console.error(error);
+    })
+}
+
+const removeEmployeePrompt = () => {
+    inquirer.prompt(removeEmployee).then((answers) => {
+
+    }).catch((error) => {
+        console.error(error);
+    })
+}
+
+const removeRolePrompt = () => {
+    inquirer.prompt(removeRole).then((answers) => {
+        
+    }).catch((error) => {
+        console.error(error);
+    })
+}
+
+const removeDepartmentPrompt = () => {
+    inquirer.prompt(removeDepartment).then((answers) => {
+        
+    }).catch((error) => {
+        console.error(error);
+    })
+}
+
+// create connection to database
 const connection = mysql.createConnection(
     {
     host: 'localhost',
@@ -87,7 +282,7 @@ const viewRoles = () => {
 // view current departments
 const viewDepartments = () => {
     connection.query(
-        `SELECT * FROM departments`,
+        `INSERT INTO Customers SET ID=2, FirstName='User2';`,
         function(err, results) {
             if (err) return console.log(err);
             console.log('\n');
@@ -99,7 +294,8 @@ const viewDepartments = () => {
 };
 
 // add new employee
-const addEmployee = () => {
+const addEmployeeFunction = () => {
+    addEmployeePrompt();
     connection.query(
         ``,
         function(err, results) {
@@ -113,7 +309,7 @@ const addEmployee = () => {
 };
 
 // add new role
-const addRole = () => {
+const addRoleFunction = () => {
     connection.query(
         ``,
         function(err, results) {
@@ -127,7 +323,7 @@ const addRole = () => {
 };
 
 // add new department
-const addDepartment = () => {
+const addDepartmentFunction = () => {
     connection.query(
         ``,
         function(err, results) {
@@ -141,7 +337,7 @@ const addDepartment = () => {
 };
 
 // remove existing employee
-const removeEmployee = () => {
+const removeEmployeeFunction = () => {
     connection.query(
         ``,
         function(err, results) {
@@ -155,7 +351,7 @@ const removeEmployee = () => {
 };
 
 // remove existing role
-const removeRole = () => {
+const removeRoleFunction = () => {
     connection.query(
         ``,
         function(err, results) {
@@ -169,7 +365,7 @@ const removeRole = () => {
 };
 
 // remove existing department
-const removeDepartment = () => {
+const removeDepartmentFunction = () => {
     connection.query(
         ``,
         function(err, results) {
@@ -183,7 +379,7 @@ const removeDepartment = () => {
 };
 
 // update employee info
-const updateEmployee = () => {
+const updateEmployeeFunction = () => {
     connection.query(
         ``,
         function(err, results) {
@@ -204,7 +400,7 @@ function userInteractFunction() {
         if (answers.interact === '✩ view all employees ✩'){
             viewEmployees();
         } else if (answers.interact === '✩ add employee ✩'){
-            console.log(answers.interact)
+            addEmployeeFunction();
         } else if (answers.interact === '✩ update employee ✩'){
             console.log(answers.interact)
         } else if (answers.interact === '✩ remove employee ✩'){
@@ -230,6 +426,5 @@ function userInteractFunction() {
     })
 };
 
-// createDatabase();
-// starterData();
+
 userInteractFunction();
