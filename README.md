@@ -14,9 +14,13 @@ This application is a tool to store company employees, roles, and departments to
 
 
 ## Installation
-To install, clone the repository and open with prefered editor. Note: mySQL, node.js and npm must be installed. You will need some additional packages, so within your terminal type "npm i" to install all dependencies from package.json file. From there, you can launch the app by following usage instructions.
+To install, clone the repository and open with prefered editor. Note: mySQL, node.js and npm must be installed. You will need some additional packages, so within your terminal type "npm i" to install all dependencies from package.json file. Additionally, you must use mySQL to create the database you will be interacting with. In your terminal within the db directory, type "mysql -u root" OR "mysql -u root -p" if you have a password. Then, type "source schema.sql" and after, "source seeds.sql". From there, you can launch the app by following usage instructions.
 
 How to install dependencies:
+
+https://user-images.githubusercontent.com/88465484/142147841-a274ac80-9bfb-499d-adf0-64797247ab2c.mov
+
+How to source mySQL files:
 
 
 
