@@ -188,53 +188,195 @@ const updateManager = [
 
 // functions to initialize inquirer
 
+// INSERT INTO employees SET id = ${newEmployee.id}, first_name = "${newEmployee.firstName}", 
+//          last_name = "${newEmployee.lastName}", role_id = ${newEmployee.roleId};`,
 const addEmployeePrompt = () => {
     inquirer.prompt(addEmployee).then((answers) => {
-        newEmployee = new createEmployee(answers.id, answers.firstName, answers.lastName, answers.roleId, answers.manager)
+        if (answers.id === '' || answers.firstName === '' || answers.lastName === '' || answers.roleId === '') {
+            console.log('\n',"Input is required.", '\n')
+            return userInteractFunction();
+        };
+        addEmployeeFunction(answers);
     }).catch((error) => {
         console.error(error);
-    })
-}
+    });
+};
 
 const addRolePrompt = () => {
     inquirer.prompt(addRole).then((answers) => {
-        newRole = createRole(answers.roleTitle, answers.roleSalary, answers.roleDepartment)
+        if (answers.roleTitle === '' || answers.roleSalary === '' || answers.roleDepartment === '') {
+            console.log('\n',"Input is required.", '\n')
+            return userInteractFunction();
+        };
+        addRoleFunction(answers);
     }).catch((error) => {
         console.error(error);
-    })
-}
+    });
+};
 
 const addDepartmentPrompt = () => {
     inquirer.prompt(addDepartment).then((answers) => {
-        newDepartment = createDepartment(answers.departmentName)
+        if (answers.departmentName === null || answers.departmentName === '') {
+            console.log('\n',"Input is required.", '\n')
+            return userInteractFunction();
+        };
+        addDepartmentFunction(answers);
     }).catch((error) => {
         console.error(error);
-    })
-}
+    });
+};
 
 const removeEmployeePrompt = () => {
     inquirer.prompt(removeEmployee).then((answers) => {
-
+        if (answers.employeeRemove === null || answers.employeeRemove === '') {
+            console.log('\n',"Input is required.", '\n')
+            return userInteractFunction();
+        };
+        removeEmployeeFunction(answers);
     }).catch((error) => {
         console.error(error);
-    })
-}
+    });
+};
 
 const removeRolePrompt = () => {
     inquirer.prompt(removeRole).then((answers) => {
-        
+        if (answers.roleRemove === null || answers.roleRemove === '') {
+            console.log('\n',"Input is required.", '\n')
+            return userInteractFunction();
+        };
+        removeRoleFunction(answers);
     }).catch((error) => {
         console.error(error);
-    })
-}
+    });
+};
 
 const removeDepartmentPrompt = () => {
     inquirer.prompt(removeDepartment).then((answers) => {
-        
+        if (answers.departmentRemove === null || answers.departmentRemove === '') {
+            console.log('\n',"Input is required.", '\n')
+            return userInteractFunction();
+        };
+        removeDepartmentFunction(answers);
+    }).catch((error) => {
+        console.error(error);
+    });
+};
+
+const updateIdPrompt = (id) => {
+    inquirer.prompt(updateId).then((answers) => {
+        if (answers.updateId === null || answers.updateId === '') {
+            console.log('\n',"Input is required.", '\n')
+            return userInteractFunction();
+        };
+        connection.query(
+            `UPDATE employees SET id = ${answers.updateId} WHERE id = ${id.employeeUpdate}`,
+            function(err) {
+                if (err) return console.log(err);
+                console.log("\n", "Successfully Updated Employee!", "\n")
+                viewEmployees();
+            }
+        );
+    }).catch((error) => {
+        console.error(error);
+    });
+};
+
+const updateFNamePrompt = (id) => {
+    inquirer.prompt(updateFName).then((answers) => {
+        if (answers.updateFname === null || answers.updateFname === '') {
+            console.log('\n',"Input is required.", '\n')
+            return userInteractFunction();
+        }
+        connection.query(
+            `UPDATE employees SET first_name = "${answers.updateFname}" WHERE id = ${id.employeeUpdate}`,
+            function(err) {
+                if (err) return console.log(err);
+                console.log("\n", "Successfully Updated Employee!", "\n")
+                viewEmployees();
+            }
+        );
+    }).catch((error) => {
+        console.error(error);
+    });
+};
+
+const updateLNamePrompt = (id) => {
+    inquirer.prompt(updateLName).then((answers) => {
+        if (answers.updateLname === null || answers.updateLname === '') {
+            console.log('\n',"Input is required.", '\n')
+            return userInteractFunction();
+        };
+        connection.query(
+            `UPDATE employees SET last_name = "${answers.updateLname}" WHERE id = ${id.employeeUpdate}`,
+            function(err) {
+                if (err) return console.log(err);
+                console.log("\n", "Successfully Updated Employee!", "\n")
+                viewEmployees();
+            }
+        );
+    }).catch((error) => {
+        console.error(error);
+    });
+};
+
+const updateRolePrompt = (id) => {
+    inquirer.prompt(updateRole).then((answers) => {
+        if (answers.updateRole === null || answers.updateRole === '') {
+            console.log('\n',"Input is required.", '\n')
+            return userInteractFunction();
+        };
+        connection.query(
+            `UPDATE employees SET role_id  = ${answers.updateRole} WHERE id = ${id.employeeUpdate}`,
+            function(err) {
+                if (err) return console.log(err);
+                console.log("\n", "Successfully Updated Employee!", "\n")
+                viewEmployees();
+            }
+        );
+    }).catch((error) => {
+        console.error(error);
+    });
+};
+
+const updateManagerPrompt = (id) => {
+    inquirer.prompt(updateManager).then((answers) => {
+        if (answers.updateManager === null || answers.updateManager === '') {
+            console.log('\n',"Input is required.", '\n')
+            return userInteractFunction();
+        };
+        connection.query(
+            `UPDATE employees SET manager = ${answers.updateManager} WHERE id = ${id.employeeUpdate}`,
+            function(err) {
+                if (err) return console.log(err);
+                console.log("\n", "Successfully Updated Employee!", "\n")
+                viewEmployees();
+            }
+        );
+    }).catch((error) => {
+        console.error(error);
+    });
+};
+
+const updateEmployeePrompt = () => {
+    inquirer.prompt(updateEmployee).then((answers) => {
+        if (answers.employeeUpdate === null || answers.employeeUpdate === '') {
+            console.log('\n',"Input is required.", '\n')
+            userInteractFunction();
+        } else if (answers.employeeChange === '✩ id ✩') {
+            updateIdPrompt(answers);
+        } else if (answers.employeeChange === '✩ first name ✩') {
+            updateFNamePrompt(answers);
+        } else if (answers.employeeChange === '✩ last name ✩') {
+            updateLNamePrompt(answers);
+        } else if (answers.employeeChange === '✩ role id ✩') {
+            updateRolePrompt(answers)
+        } else if (answers.employeeChange === '✩ manager ✩') {
+            updateManagerPrompt(answers);
+        }
     }).catch((error) => {
         console.error(error);
     })
-}
+};
 
 // create connection to database
 const connection = mysql.createConnection(
@@ -250,7 +392,9 @@ const connection = mysql.createConnection(
 // view current employees 
 const viewEmployees = () => {
     connection.query(
-        `SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.department, roles.salary, employees.manager 
+       `SELECT employees.id AS ID, employees.first_name AS "First Name", 
+        employees.last_name AS "Last Name", roles.title AS Title, departments.department AS Department, 
+        roles.salary AS Salary, employees.manager AS Manager
         FROM employees 
         JOIN roles ON employees.role_id = roles.id 
         JOIN departments ON roles.department_id = departments.id`,
@@ -259,7 +403,7 @@ const viewEmployees = () => {
             console.log('\n');
             console.table(results); // results contains rows returned by server
             console.log('\n');
-        userInteractFunction();
+            userInteractFunction();
         }
     );
 };
@@ -267,14 +411,16 @@ const viewEmployees = () => {
 // view current roles
 const viewRoles = () => {
     connection.query(
-       `SELECT id, title, department_id AS department, salary
-        FROM roles`,
+       `SELECT roles.id AS ID, roles.title AS Title, roles.salary AS Salary, 
+        roles.department_id AS "Department ID", departments.department AS Department
+        FROM roles
+        JOIN departments ON roles.department_id = departments.id`,
         function(err, results) {
             if (err) return console.log(err);
             console.log('\n');
             console.table(results); // results contains rows returned by server
             console.log('\n');
-        userInteractFunction();
+            userInteractFunction();
         }
     );
 };
@@ -282,145 +428,121 @@ const viewRoles = () => {
 // view current departments
 const viewDepartments = () => {
     connection.query(
-        `INSERT INTO Customers SET ID=2, FirstName='User2';`,
+        `SELECT id AS ID, department AS Department
+         FROM departments`,
         function(err, results) {
             if (err) return console.log(err);
             console.log('\n');
             console.table(results); // results contains rows returned by server
             console.log('\n');
-        userInteractFunction();
+            userInteractFunction();
         }
     );
 };
 
 // add new employee
-const addEmployeeFunction = () => {
-    addEmployeePrompt();
+const addEmployeeFunction = (newEmployee) => {
     connection.query(
-        ``,
-        function(err, results) {
+        // id, first_name, last_name, role_id, manager
+        `INSERT INTO employees SET id = ${newEmployee.id}, first_name = "${newEmployee.firstName}", 
+         last_name = "${newEmployee.lastName}", role_id = ${newEmployee.roleId};`,
+        function(err) {
             if (err) return console.log(err);
-            console.log('\n');
-            console.table(results); // results contains rows returned by server
-            console.log('\n');
-        userInteractFunction();
+            console.log("\n", "Successfully Added Employee!", "\n")
+            viewEmployees();
         }
     );
 };
 
 // add new role
-const addRoleFunction = () => {
+const addRoleFunction = (newRole) => {
     connection.query(
-        ``,
-        function(err, results) {
+        // title, salary, department_id
+        `INSERT INTO roles SET title = "${newRole.roleTitle}", salary = ${newRole.roleSalary}, 
+        department_id = ${newRole.roleDepartment};`,
+        function(err) {
             if (err) return console.log(err);
-            console.log('\n');
-            console.table(results); // results contains rows returned by server
-            console.log('\n');
-        userInteractFunction();
+            console.log("\n", "Successfully Added Role!", "\n")
+            viewRoles();
         }
     );
 };
 
 // add new department
-const addDepartmentFunction = () => {
+const addDepartmentFunction = (newDepartment) => {
     connection.query(
-        ``,
-        function(err, results) {
+        `INSERT INTO departments SET department = "${newDepartment.departmentName}";`,
+        function(err) {
             if (err) return console.log(err);
-            console.log('\n');
-            console.table(results); // results contains rows returned by server
-            console.log('\n');
-        userInteractFunction();
+            console.log("\n", "Successfully Added Department!", "\n")
+            viewDepartments();
         }
     );
 };
 
 // remove existing employee
-const removeEmployeeFunction = () => {
+const removeEmployeeFunction = (answers) => {
     connection.query(
-        ``,
-        function(err, results) {
+        `DELETE FROM employees WHERE id = ${answers.employeeRemove}`,
+        function(err) {
             if (err) return console.log(err);
-            console.log('\n');
-            console.table(results); // results contains rows returned by server
-            console.log('\n');
-        userInteractFunction();
+            console.log("\n", "Successfully Removed Employee!", "\n")
+            userInteractFunction();
         }
     );
 };
 
 // remove existing role
-const removeRoleFunction = () => {
+const removeRoleFunction = (answers) => {
     connection.query(
-        ``,
-        function(err, results) {
+        `DELETE FROM roles WHERE id = ${answers.roleRemove}`,
+        function(err) {
             if (err) return console.log(err);
-            console.log('\n');
-            console.table(results); // results contains rows returned by server
-            console.log('\n');
-        userInteractFunction();
+            console.log("\n", "Successfully Removed Role!", "\n")
+            userInteractFunction();
         }
     );
 };
 
 // remove existing department
-const removeDepartmentFunction = () => {
+const removeDepartmentFunction = (answers) => {
     connection.query(
-        ``,
-        function(err, results) {
+        `DELETE FROM departments WHERE id = ${answers.departmentRemove}`,
+        function(err) {
             if (err) return console.log(err);
-            console.log('\n');
-            console.table(results); // results contains rows returned by server
-            console.log('\n');
-        userInteractFunction();
+            console.log("\n", "Successfully Removed Department!", "\n")
+            userInteractFunction();
         }
     );
 };
-
-// update employee info
-const updateEmployeeFunction = () => {
-    connection.query(
-        ``,
-        function(err, results) {
-            if (err) return console.log(err);
-            console.log('\n');
-            console.table(results); // results contains rows returned by server
-            console.log('\n');
-        userInteractFunction();
-        }
-    );
-};
-
 
 // create function for prompt
-function userInteractFunction() {
+const userInteractFunction = () => {
     inquirer.prompt(userInteract).then((answers) => {
 
         if (answers.interact === '✩ view all employees ✩'){
             viewEmployees();
         } else if (answers.interact === '✩ add employee ✩'){
-            addEmployeeFunction();
+            addEmployeePrompt();
         } else if (answers.interact === '✩ update employee ✩'){
-            console.log(answers.interact)
+            updateEmployeePrompt();
         } else if (answers.interact === '✩ remove employee ✩'){
-            console.log(answers.interact)
+            removeEmployeePrompt();
         } else if (answers.interact === '✩ view all roles ✩'){
             viewRoles();
         } else if (answers.interact === '✩ add role ✩'){
-            console.log(answers.interact)
+            addRolePrompt();
         } else if (answers.interact === '✩ remove role ✩'){
-            console.log(answers.interact)
+            removeRolePrompt();
         } else if (answers.interact === '✩ view all departments ✩'){
             viewDepartments()
         } else if (answers.interact === '✩ add department ✩'){
-            console.log(answers.interact)
+            addDepartmentPrompt();
         } else if (answers.interact === '✩ remove department ✩'){
-            console.log(answers.interact)
+            removeDepartmentPrompt();
         } else {
             return process.exit();
         }
-
     }).catch((error) => {
         console.error(error);
     })
