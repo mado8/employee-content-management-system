@@ -1,9 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
-const createDepartment = require('./lib/department');
-const createRole = require('./lib/role');
-const createEmployee = require('./lib/employee');
 
 console.log(`
                                     ███████╗███╗   ███╗██████╗ ██╗      ██████╗ ██╗   ██╗███████╗███████╗
