@@ -35,13 +35,24 @@ const userInteract = [
         message: '✩ What would you like to do? ✩',
         choices: [
         '✩ view all employees ✩', '✩ view all roles ✩', '✩ view all departments ✩', 
-        '✩ update employee ✩', 
+        '✩ update employee ✩', '✩ view department budgets ✩',
         '✩ add role ✩', '✩ add department ✩', '✩ add employee ✩', 
         '✩ remove department ✩', '✩ remove role ✩', '✩ remove employee ✩',
         '✩ quit ✩'
         ],
     },
 ];
+
+const sortEmployees = [
+    {
+        type: 'list',
+        name: 'sort',
+        message: '✩ How would you like to sort the employees? ✩',
+        choices: [
+        '✩ default ✩', '✩ by manager ✩', '✩ by departments ✩', 
+        ],
+    },
+]
 
 // add new employee to database prompt
 const addEmployee = [
@@ -348,6 +359,7 @@ const updateRolePrompt = (id) => {
 };
 
 // function to change employee's manager to desired imput
+// *********************** BONUS *************************
 const updateManagerPrompt = (id) => {
     inquirer.prompt(updateManager).then((answers) => {
         if (answers.updateManager === null || answers.updateManager === '') {
@@ -365,28 +377,6 @@ const updateManagerPrompt = (id) => {
     }).catch((error) => {
         console.error(error);
     });
-};
-
-// asks for employee id and calls function to update desired feature
-const updateEmployeePrompt = () => {
-    inquirer.prompt(updateEmployee).then((answers) => {
-        if (answers.employeeUpdate === null || answers.employeeUpdate === '') {
-            console.log('\n',"Input is required.", '\n')
-            userInteractFunction();
-        } else if (answers.employeeChange === '✩ id ✩') {
-            updateIdPrompt(answers);
-        } else if (answers.employeeChange === '✩ first name ✩') {
-            updateFNamePrompt(answers);
-        } else if (answers.employeeChange === '✩ last name ✩') {
-            updateLNamePrompt(answers);
-        } else if (answers.employeeChange === '✩ role id ✩') {
-            updateRolePrompt(answers)
-        } else if (answers.employeeChange === '✩ manager ✩') {
-            updateManagerPrompt(answers);
-        }
-    }).catch((error) => {
-        console.error(error);
-    })
 };
 
 
@@ -494,6 +484,7 @@ const addDepartmentFunction = (newDepartment) => {
 };
 
 // remove existing employee
+// *********************** BONUS *************************
 const removeEmployeeFunction = (answers) => {
     connection.query(
         `DELETE FROM employees WHERE id = ${answers.employeeRemove}`,
@@ -506,6 +497,7 @@ const removeEmployeeFunction = (answers) => {
 };
 
 // remove existing role
+// *********************** BONUS *************************
 const removeRoleFunction = (answers) => {
     connection.query(
         `DELETE FROM roles WHERE id = ${answers.roleRemove}`,
@@ -518,6 +510,7 @@ const removeRoleFunction = (answers) => {
 };
 
 // remove existing department
+// *********************** BONUS *************************
 const removeDepartmentFunction = (answers) => {
     connection.query(
         `DELETE FROM departments WHERE id = ${answers.departmentRemove}`,
@@ -529,12 +522,112 @@ const removeDepartmentFunction = (answers) => {
     );
 };
 
+// sort by manager
+// *********************** BONUS *************************
+const sortManager = () => {
+    connection.query(
+        `SELECT employees.id AS ID, employees.first_name AS "First Name", 
+         employees.last_name AS "Last Name", roles.title AS Title, departments.department AS Department, 
+         roles.salary AS Salary, employees.manager AS Manager
+         FROM employees 
+         JOIN roles ON employees.role_id = roles.id 
+         JOIN departments ON roles.department_id = departments.id
+         ORDER BY employees.manager DESC`,
+         function(err, results) {
+             if (err) return console.log(err);
+             console.log('\n');
+             console.table(results); // results contains rows returned by server
+             console.log('\n');
+             userInteractFunction();
+         }
+     );
+};
+
+// sort by department 
+// *********************** BONUS *************************
+const sortDepartment = () => {
+    connection.query(
+        `SELECT employees.id AS ID, employees.first_name AS "First Name", 
+         employees.last_name AS "Last Name", roles.title AS Title, departments.department AS Department, 
+         roles.salary AS Salary, employees.manager AS Manager
+         FROM employees 
+         JOIN roles ON employees.role_id = roles.id 
+         JOIN departments ON roles.department_id = departments.id
+         ORDER BY departments.department DESC`,
+         function(err, results) {
+             if (err) return console.log(err);
+             console.log('\n');
+             console.table(results); // results contains rows returned by server
+             console.log('\n');
+             userInteractFunction();
+         }
+     );
+};
+
+// calculate department's budget
+// *********************** BONUS *************************
+const departmentBudget = () => {
+    connection.query(
+        `SELECT departments.department AS Department,
+         SUM(roles.salary) AS Budget
+         FROM employees
+         JOIN roles ON employees.role_id = roles.id 
+         JOIN departments ON roles.department_id = departments.id 
+         GROUP BY departments.department
+         `,
+         function(err, results) {
+            if (err) return console.log(err);
+            console.log('\n');
+            console.table(results); // results contains rows returned by server
+            console.log('\n');
+            userInteractFunction();
+        }
+    );
+}
+
+// sort by prompt function
+const sortBy = () => {
+    inquirer.prompt(sortEmployees).then((answers) => {
+        if (answers.sort === '✩ default ✩') {
+            viewEmployees();
+        } else if (answers.sort === '✩ by manager ✩') {
+            sortManager();
+        } else if (answers.sort === '✩ by departments ✩') {
+            sortDepartment();
+        }
+    }).catch((error) => {
+        console.error(error);
+    })
+};
+
+// asks for employee id and calls function to update desired employee feature
+const updateEmployeePrompt = () => {
+    inquirer.prompt(updateEmployee).then((answers) => {
+        if (answers.employeeUpdate === null || answers.employeeUpdate === '') {
+            console.log('\n',"Input is required.", '\n')
+            userInteractFunction();
+        } else if (answers.employeeChange === '✩ id ✩') {
+            updateIdPrompt(answers);
+        } else if (answers.employeeChange === '✩ first name ✩') {
+            updateFNamePrompt(answers);
+        } else if (answers.employeeChange === '✩ last name ✩') {
+            updateLNamePrompt(answers);
+        } else if (answers.employeeChange === '✩ role id ✩') {
+            updateRolePrompt(answers)
+        } else if (answers.employeeChange === '✩ manager ✩') {
+            updateManagerPrompt(answers);
+        }
+    }).catch((error) => {
+        console.error(error);
+    })
+};
+
 // create function for prompt
 const userInteractFunction = () => {
     inquirer.prompt(userInteract).then((answers) => {
 
         if (answers.interact === '✩ view all employees ✩'){
-            viewEmployees();
+            sortBy();
         } else if (answers.interact === '✩ add employee ✩'){
             addEmployeePrompt();
         } else if (answers.interact === '✩ update employee ✩'){
@@ -552,7 +645,9 @@ const userInteractFunction = () => {
         } else if (answers.interact === '✩ add department ✩'){
             addDepartmentPrompt();
         } else if (answers.interact === '✩ remove department ✩'){
-            removeDepartmentPrompt();
+            removeDepartmentPrompt(); 
+        } else if (answers.interact === '✩ view department budgets ✩'){
+            departmentBudget();
         } else {
             return process.exit();
         }
