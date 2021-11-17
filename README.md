@@ -22,7 +22,7 @@ https://user-images.githubusercontent.com/88465484/142149053-c297e39e-dcd7-4003-
 
 How to source mySQL files:
 
-
+https://user-images.githubusercontent.com/88465484/142149194-f39f851f-1c82-415d-a5ea-372ff43e7d6f.mov
 
 ## Usage
 To launch the app, navigate to index.js within the terminal and type "node index.js". You will then be prompted with a list of options to navigate or change current database. This information will be stored locally on your device.
